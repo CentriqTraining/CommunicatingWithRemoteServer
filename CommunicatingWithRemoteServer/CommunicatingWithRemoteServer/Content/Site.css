@@ -1,0 +1,12 @@
+﻿body {
+    padding: 36px 12px 6px 12px;
+}
+.form-control {
+    width: 50%;
+}
+label {
+    margin-right: 8px;
+}
+.form-inline {
+    margin-bottom: 32px;
+}

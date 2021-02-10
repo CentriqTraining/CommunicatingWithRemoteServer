@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+    <script src="Scripts/mustache.js"></script>
+    <script>
+        var baseUrl = "https://centriqdata.azurewebsites.net/data/chuck";
+        window.addEventListener("load", function () {
+            getAll();
+            document.getElementById('cmdSearch')
+                .addEventListener("click", searchOne);
+        })
+
+        async function searchOne() {
+            let id = document.getElementById('txtSearch').value;
+            let resp = await fetch(baseUrl + "?id=" + id);
+            let data = await resp.json();
+            addRecords(data);
+        }
+        async function getAll() {
+            let resp = await fetch(baseUrl);
+            let data = await resp.json();
+            addRecords(data);
+        }
+        function addRecords(data) {
+            var html = "";
+            var template = "";
+            if (Array.isArray(data)) {
+                template = "{{#.}}<tr><td>{{ID}}</td><td>{{FirstName}}</td><td>{{LastName}}</td></tr>{{/.}}";
+            } else {
+                template = "<tr><td>{{ID}}</td><td>{{FirstName}}</td><td>{{LastName}}</td></tr>";
+            }
+            document.getElementById('datarows').innerHTML = Mustache.render(template, data);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="form-inline">
+            <label for="txtSearch">Search:</label>
+            <input class="form-control" type="text" placeholder="Enter ID" id="txtSearch" name="txtSearch" />
+            <div id="cmdSearch" class="btn btn-outline-primary">Search</div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                </tr>
+            </thead>
+            <tbody id="datarows"></tbody>
+        </table>
+    </div>
+</body>
+</html>
